@@ -5,27 +5,27 @@ import com.atlassian.performance.tools.jiraactions.api.WebJira
 import com.atlassian.performance.tools.jiraactions.api.action.*
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
-import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueKeyMemory
-import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueMemory
-import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory
-import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveProjectMemory
+import com.atlassian.performance.tools.jiraactions.api.memories.Memory2
+import com.atlassian.performance.tools.jiraactions.api.memories.MemoryFactory
+import com.atlassian.performance.tools.jiraactions.memories.IssueKeyMemory2Adapter
 
 /**
  * Provides Jira Core specific `Scenario`.
  * @since 3.3.0
  */
 class JiraCoreScenario constructor() : Scenario {
-    private lateinit var issueKeyMemory: IssueKeyMemory
+    private lateinit var issueKeyMemory: Memory2<String>
 
-    private constructor(issueKeyMemory: IssueKeyMemory?) : this() {
+    private constructor(issueKeyMemory: Memory2<String>?) : this() {
         issueKeyMemory?.let { this.issueKeyMemory = it }
     }
 
+
     override fun getActions(jira: WebJira, seededRandom: SeededRandom, meter: ActionMeter): List<Action> {
         initializeIssueKeyMemory(seededRandom)
-        val projectMemory = AdaptiveProjectMemory(random = seededRandom)
-        val jqlMemory = AdaptiveJqlMemory(seededRandom)
-        val issueMemory = AdaptiveIssueMemory(issueKeyMemory, seededRandom)
+        val projectMemory = MemoryFactory.adaptiveProjectMemory(seededRandom)
+        val jqlMemory = MemoryFactory.adaptiveJqlMemory(seededRandom)
+        val issueMemory = MemoryFactory.adaptiveIssueMemory(issueKeyMemory, seededRandom)
 
         val scenario: MutableList<Action> = mutableListOf()
 
@@ -92,7 +92,7 @@ class JiraCoreScenario constructor() : Scenario {
     private fun initializeIssueKeyMemory(seededRandom: SeededRandom) {
         synchronized(this) {
             if (this::issueKeyMemory.isInitialized.not()) {
-                issueKeyMemory = AdaptiveIssueKeyMemory(seededRandom)
+                issueKeyMemory = MemoryFactory.adaptiveIssueKeyMemory(seededRandom)
             }
         }
     }
@@ -102,12 +102,15 @@ class JiraCoreScenario constructor() : Scenario {
      * @since 3.3.0
      */
     class Builder {
-        private var issueKeyMemory: IssueKeyMemory? = null
+        private var issueKeyMemory: Memory2<String>? = null
 
         /**
          * @since 3.3.0
          */
-        fun issueKeyMemory(issueKeyMemory: IssueKeyMemory) = apply { this.issueKeyMemory = issueKeyMemory }
+        @Deprecated("User issueKeyMemory(issueKeyMemory: Memory2<String>)")
+        fun issueKeyMemory(issueKeyMemory: IssueKeyMemory) = apply { this.issueKeyMemory = IssueKeyMemory2Adapter(issueKeyMemory) }
+
+        fun issueKeyMemory(issueKeyMemory: Memory2<String>) = apply { this.issueKeyMemory = issueKeyMemory }
 
         /**
          * @since 3.3.0
