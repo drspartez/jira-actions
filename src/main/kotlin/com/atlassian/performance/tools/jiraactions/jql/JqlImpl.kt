@@ -67,18 +67,18 @@ internal enum class BuiltInJQL(private val sup: (JqlContext) -> String?) : JqlSu
 
             val vowels = setOf('a', 'e', 'i', 'o', 'u', 'y')
             fun numVowels(s: String): Int {
-                return s.toCharArray().asSequence().filter { vowels.contains(it) }.count()
+                return s.toCharArray().asSequence().filter { letter -> vowels.contains(letter) }.count()
             }
 
             "$description $summary"
                 .split(whitespacesPattern)
-                .filter { it.isNotBlank() }
+                .filter { str -> str.isNotBlank() }
                 .shuffled(ctx.seededRandom().random)
                 .asSequence()
-                .filter { it.matches(lettersOnly) }
-                .filter { numVowels(it) == 3 }
+                .filter { str -> str.matches(lettersOnly) }
+                .filter { str -> numVowels(str) == 3 }
                 .firstOrNull()
-                ?.let { """text ~ "$it" order by key""" }
+                ?.let { str ->  """text ~ "$str" order by key""" }
         }
     });
 

@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.util.function.Predicate
 
+@Deprecated("Use MemoryFactory.adaptiveJqlMemory")
 class AdaptiveJqlMemory(
     private val random: SeededRandom
 ) : JqlMemory {
@@ -62,6 +63,7 @@ class AdaptiveJqlMemory(
     private class TaggedBakedJql(val baked: BakedJql, val tag: String? = null)
 }
 
+@Deprecated("Use Jql")
 data class BakedJql(
     val jqlPrescription: JqlPrescription,
     val jql: String?

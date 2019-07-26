@@ -7,6 +7,7 @@ import com.atlassian.performance.tools.jiraactions.api.memories.IssueMemory
 import net.jcip.annotations.NotThreadSafe
 
 @NotThreadSafe
+@Deprecated("Use MemoryFactory.adaptiveIssueMemory")
 class AdaptiveIssueMemory(
     private val issueKeyMemory: IssueKeyMemory,
     private val random: SeededRandom

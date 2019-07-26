@@ -10,9 +10,10 @@ import com.atlassian.performance.tools.jiraactions.api.page.IssuePage
  * subsequent calls are undefined.
  * @return a jql query as a <code>String</code> if successfully rendered, <code>null</code> otherwise.
  */
+@Deprecated("Use JqlSupplier")
 typealias JqlPrescription = (IssuePage) -> String?
 
-
+@Deprecated("Use JqlSupplier.getBuiltInJqlSuppliers")
 object JqlPrescriptions {
 
     val previousReporters: JqlPrescription = { page: IssuePage ->

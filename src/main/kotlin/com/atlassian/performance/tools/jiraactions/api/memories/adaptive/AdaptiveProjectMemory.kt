@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.SeededRandom
 import com.atlassian.performance.tools.jiraactions.api.memories.Project
 import com.atlassian.performance.tools.jiraactions.api.memories.ProjectMemory
 
+@Deprecated("Use MemoryFactory.adaptiveProjectMemory")
 class AdaptiveProjectMemory(
     private val random: SeededRandom
 ) : ProjectMemory {

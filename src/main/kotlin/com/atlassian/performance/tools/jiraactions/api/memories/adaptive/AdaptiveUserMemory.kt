@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.SeededRandom
 import com.atlassian.performance.tools.jiraactions.api.memories.User
 import com.atlassian.performance.tools.jiraactions.api.memories.UserMemory
 
+@Deprecated("Use MemoryFactory.adaptiveUserMemory")
 class AdaptiveUserMemory(
     private val random: SeededRandom
 ) : UserMemory {
